@@ -8,21 +8,30 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-    steps:
-    
-      - uses: actions/checkout@v2
 
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        
       - name: Install gtest
         run: sudo apt install libgtest-dev cmake
-
+      
       - name: Configure gtest
         working-directory: /usr/src/gtest
         run: sudo cmake CMakeLists.txt
-
+        
       - name: Build gtest
         working-directory: /usr/src/gtest
-        run:  sudo make && sudo cp *.a /usr/lib
-
-      - name: Compile and Run
-        run: g++ *.cc -lgtest -lgtest_main -lpthread && ./a.out
+        run: sudo make
+        
+      - name: Copy libraries
+        working-directory: /usr/src/gtest
+        run: sudo cp *.a /usr/lib
+        
+      - name: Compile
+        run: g++ -Wall -g -pthread *.cc -lgtest_main  -lgtest -lpthread -o main
+        
+      - name: Run
+        run: ./main
