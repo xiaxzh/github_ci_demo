@@ -15,10 +15,12 @@ jobs:
       - name: Checkout # set up your github account info and fetch your source code 
         uses: actions/checkout@v2
         
-      - name: Install gtest and Build gtest
+      - name: Install gtest
+        run: sudo apt install libgtest-dev cmake
+
+      - name: Build gtest
         working-directory: /usr/src/gtest
         run: | 
-          sudo apt install libgtest-dev cmake
           sudo cmake CMakeLists.txt
           sudo make
           sudo cp *.a /usr/lib
