@@ -12,26 +12,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout # set up your github account info and fetch your source code 
         uses: actions/checkout@v2
         
-      - name: Install gtest
-        run: sudo apt install libgtest-dev cmake
-      
-      - name: Configure gtest
+      - name: Install gtest and Build gtest
         working-directory: /usr/src/gtest
-        run: sudo cmake CMakeLists.txt
+        run: | 
+          sudo apt install libgtest-dev cmake
+          sudo cmake CMakeLists.txt
+          sudo make
+          sudo cp *.a /usr/lib
         
-      - name: Build gtest
-        working-directory: /usr/src/gtest
-        run: sudo make
-        
-      - name: Copy libraries
-        working-directory: /usr/src/gtest
-        run: sudo cp *.a /usr/lib
-        
-      - name: Compile
-        run: g++ -Wall -g -pthread *.cc -lgtest_main  -lgtest -lpthread -o main
-        
-      - name: Run
-        run: ./main
+      - name: Compile and Run
+        run: |
+          g++ -Wall -g -pthread *.cc -lgtest_main  -lgtest -lpthread -o main
+          ./main
